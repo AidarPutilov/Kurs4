@@ -1,6 +1,8 @@
+import json
+
 import requests
 from abc import ABC, abstractmethod
-from src.settings import HEAD_HUNTER_URL, ITEMS_PER_PAGE, PAGES_OF_ITEMS, DATA_FILE_PATH
+from src.settings import HEAD_HUNTER_URL, ITEMS_PER_PAGE, PAGES_OF_ITEMS, DATA_FILE_PATH, DATA_FILE_PATH_DEMO
 
 
 class ParserAPI(ABC):
@@ -32,13 +34,20 @@ class HeadHunterAPI(ParserAPI):
             self.vacancies.extend(vacancies)
             self.params['page'] += 1
 
+    def load_data_from_file(self, file_name):
+        """ Загрузка данных из файла (для теста) """
+        with open(file_name, 'r', encoding='UTF-8') as f:
+            self.vacancies = json.loads(f.read())
+
     def save_data_to_file(self):
         """ Сохрвнение данных в файл """
         with open(self.work_file, 'w', encoding='UTF-8') as f:
             print(self.vacancies, file=f)
 
-hh_list = HeadHunterAPI(DATA_FILE_PATH)
-hh_list.load_data_from_url('Python')
-hh_list.save_data_to_file()
+
+#hh_list = HeadHunterAPI(DATA_FILE_PATH)
+#hh_list.load_data_from_file(DATA_FILE_PATH_DEMO)
+#hh_list.load_data_from_url('Python')
+#hh_list.save_data_to_file()
 #print(hh_list.vacancies)
 #print(len(hh_list.vacancies))
