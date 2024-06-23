@@ -17,6 +17,6 @@ HEAD_HUNTER_URL = 'https://api.hh.ru/vacancies'
 ITEMS_PER_PAGE = 2
 
 # Количество страниц
-PAGES_OF_ITEMS = 2
+PAGES_OF_ITEMS = 10
 
 #print(DATA_FILE_PATH)
