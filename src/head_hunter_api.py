@@ -21,6 +21,7 @@ class HeadHunterAPI(ParserAPI):
         self.url = HEAD_HUNTER_URL
         self.headers = {'User-Agent': 'HH-User-Agent'}
         self.params = {
+            'locale': 'RU',
             'text': search_word,
             'page': 0,
             'per_page': 100,
@@ -40,9 +41,8 @@ class HeadHunterAPI(ParserAPI):
             raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
 
 
-if __name__ == '__main__':
-    pass
-
-    # hh = HeadHunterAPI('python')
-    # data = hh.get_data()
-    # print(data)
+# if __name__ == '__main__':
+#
+#     hh = HeadHunterAPI('python')
+#     data = hh.get_data()
+#     print(data)
