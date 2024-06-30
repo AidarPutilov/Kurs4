@@ -1,28 +1,37 @@
-
-
-
 class HHVacancy:
+    """ Класс для работы с звписями Head Hunter API """
 
-    def __init__(self, name, professional_roles, area, salary_from, salary_to, currency, employer, requirement, responsibility, url):
-        self.name = name
-        self.professional_roles = professional_roles
-        self.area = area
-        self.salary_from = salary_from
-        self.salary_to = salary_to
-        self.currency = currency
+    def __init__(self, pk, name, area, salary_from, salary_to, currency, employer, requirement, url):
+        self.__pk = pk
+        self.__name = name
+        self.__area = area
+        self.__salary_from = salary_from
+        self.__salary_to = salary_to
+        self.__currency = currency
         self.__salary = self.verify_salary(salary_from, salary_to, currency)
-        self.salary_middle = self.get_salary_midle(salary_from, salary_to)
-        self.employer = employer
-        self.requirement = requirement
-        self.responsibility = responsibility
-        self.url = url
+        self.__salary_middle = self.get_salary_middle(salary_from, salary_to)
+        self.__employer = employer
+        self.__requirement = requirement
+        self.__url = url
 
     def __str__(self):
-        return f'{self.name}, {self.employer}, {self.area}, {self.salary}'
+        return f'{self.__name}, {self.__employer}, {self.__area}, {self.__salary}'
 
+    def __lt__(self, other):
+        return self.__salary_middle < other.__salary_middle
 
-    @classmethod
-    def verify_salary(cls, salary_from, salary_to, currency) -> str:
+    def __gt__(self, other):
+        return self.__salary_middle > other.__salary_middle
+
+    def __hash__(self):
+        return hash(self.__pk)
+
+    @property
+    def pk(self):
+        return self.__pk
+
+    @staticmethod
+    def verify_salary(salary_from, salary_to, currency) -> str:
         """ Генерация строки с зарплатой, валидация """
         if salary_from and salary_to:
             return f'{salary_from}..{salary_to} {currency}'
@@ -33,8 +42,8 @@ class HHVacancy:
         else:
             return 'Зарплата не указана'
 
-    @classmethod
-    def get_salary_midle(cls, salary_from, salary_to):
+    @staticmethod
+    def get_salary_middle(salary_from, salary_to):
         """ Вычисление среднего значения зарплаты """
         if salary_from and salary_to:
             return round(0.5 * (int(salary_from) + int(salary_to)))
@@ -53,20 +62,44 @@ class HHVacancy:
     def salary(self, salary_from, salary_to, currency):
         self.__salary = self.verify_salary(salary_from, salary_to, currency)
 
-    def __lt__(self, other):
-        return self.salary_middle < other.salary_middle
+    @classmethod
+    def create_vacancy(cls, vacancy_data: dict):
+        """ Создание вакансии """
+        return cls(
+            pk=vacancy_data['id'],
+            name=vacancy_data['name'],
+            area=vacancy_data['area']['name'],
+            salary_from=vacancy_data['salary']['from'],
+            salary_to=vacancy_data['salary']['to'],
+            currency=vacancy_data['salary']['currency'],
+            employer=vacancy_data['employer']['name'],
+            requirement=vacancy_data['snippet']['requirement'],
+            url=vacancy_data['alternate_url']
+        )
 
-    def __gt__(self, other):
-        return self.salary_middle > other.salary_middle
+    def to_dict(self) -> dict:
+        """ Преобразование объекта в словарь для записи в файл """
+        return {
+            'id': self.__pk,
+            'name': self.__name,
+            'area': self.__area,
+            'salary_from': self.__salary_from,
+            'salary_to': self.__salary_to,
+            'currency': self.__currency,
+            'employer': self.__employer,
+            'requirement': self.__requirement,
+            'url': self.__url
+        }
 
 
-v1 = HHVacancy('Рабочий', 'Слесарь', 'Москва', '', '200', 'руб.', 'Завод', 'Знание SQL', 'Сопровождение DataLake', 'ya.ru')
-v2 = HHVacancy('Служащий', 'Менагер', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'Сопровождение DataLake', 'ya.ru')
+if __name__ == '__main__':
+    pass
 
-
-print(v1)
-print(v2)
-print(v1 < v2)
-
-
-
+    # v1 = HHVacancy(1, 'Рабочий', 'Москва', '', '100', 'руб.', 'Завод', 'Знание SQL', 'ya.ru')
+    # v2 = HHVacancy(2, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
+    # v3 = HHVacancy(3, 'Служащий2', 'Москва', '200', '400', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
+    #
+    # print(v1)
+    # print(v2)
+    # print(v3)
+    # print(v1 < v2)
