@@ -61,7 +61,9 @@ class JSONSaver(Saver):
         new_items = [item for item in old_items if item['id'] not in del_ids]
         self.write_data(new_items)
 
+
 if __name__ == '__main__':
+    pass
 
     # s1 = JSONSaver(DATA_FILE_PATH_DEMO)
     # ss = s1.load_data()
