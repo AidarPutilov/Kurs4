@@ -30,6 +30,14 @@ class HHVacancy:
     def pk(self):
         return self.__pk
 
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def salary_middle(self):
+        return self.__salary_middle
+
     @staticmethod
     def verify_salary(salary_from, salary_to, currency) -> str:
         """ Генерация строки с зарплатой, валидация """
@@ -47,10 +55,10 @@ class HHVacancy:
         """ Вычисление среднего значения зарплаты """
         if salary_from and salary_to:
             return round(0.5 * (int(salary_from) + int(salary_to)))
-        elif not salary_to:
-            return int(salary_from)
-        elif not salary_from:
+        elif salary_to:
             return int(salary_to)
+        elif salary_from:
+            return int(salary_from)
         else:
             return 0
 
@@ -65,17 +73,30 @@ class HHVacancy:
     @classmethod
     def create_vacancy(cls, vacancy_data: dict):
         """ Создание вакансии """
-        return cls(
-            pk=vacancy_data['id'],
-            name=vacancy_data['name'],
-            area=vacancy_data['area']['name'],
-            salary_from=vacancy_data['salary']['from'],
-            salary_to=vacancy_data['salary']['to'],
-            currency=vacancy_data['salary']['currency'],
-            employer=vacancy_data['employer']['name'],
-            requirement=vacancy_data['snippet']['requirement'],
-            url=vacancy_data['alternate_url']
-        )
+        pk = vacancy_data.get('id')
+        name = vacancy_data.get('name')
+        if vacancy_data['area']:
+            area = vacancy_data.get('area').get('name')
+        else:
+            area = None
+        if vacancy_data['salary']:
+            salary_from = vacancy_data.get('salary').get('from')
+            salary_to = vacancy_data.get('salary').get('to')
+            currency = vacancy_data.get('salary').get('currency')
+        else:
+            salary_from = None
+            salary_to = None
+            currency = None
+        if vacancy_data['employer']:
+            employer = vacancy_data.get('employer').get('name')
+        else:
+            employer = None
+        if vacancy_data['snippet']:
+            requirement = vacancy_data.get('snippet').get('requirement')
+        else:
+            requirement = None
+        url = vacancy_data.get('alternate_url')
+        return cls(pk, name, area, salary_from, salary_to, currency, employer, requirement, url)
 
     def to_dict(self) -> dict:
         """ Преобразование объекта в словарь для записи в файл """
