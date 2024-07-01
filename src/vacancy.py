@@ -42,6 +42,8 @@ class HHVacancy:
     def verify_salary(salary_from, salary_to, currency) -> str:
         """ Генерация строки с зарплатой, валидация """
         if salary_from and salary_to:
+            if salary_from == salary_to:
+                return f'{salary_to} {currency}'
             return f'{salary_from}..{salary_to} {currency}'
         elif salary_from and not salary_to:
             return f'От {salary_from} {currency}'
