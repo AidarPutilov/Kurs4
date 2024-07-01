@@ -1,36 +1,45 @@
-# Создание экземпляра класса для работы с API сайтов с вакансиями
-hh_api = HeadHunterAPI()
+import logging
+from src.exceptions import ParserAPIException
+from src.head_hunter_api import HeadHunterAPI
+from src.utils import user_interface, filter_vacancies_by_keywords, filter_vacancies_by_salary, sort_vacancies, \
+    get_vacancy_units
 
-# Получение вакансий с hh.ru в формате JSON
-hh_vacancies = hh_api.get_vacancies("Python")
+logger = logging.getLogger(__name__)
 
-# Преобразование набора данных из JSON в список объектов
-vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
+def main():
 
-# Пример работы контструктора класса с одной вакансией
-vacancy = Vacancy("Python Developer", "", "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")
+    # Начальный диалог
+    user_input = user_interface()
 
-# Сохранение информации о вакансиях в файл
-json_saver = JSONSaver()
-json_saver.add_vacancy(vacancy)
-json_saver.delete_vacancy(vacancy)
+    # Создание экземпляра класса для работы с API сайтов с вакансиями
+    hh = HeadHunterAPI(user_input['search_word'])
 
-# Функция для взаимодействия с пользователем
-def user_interaction():
-    platforms = ["HeadHunter"]
-    search_query = input("Введите поисковый запрос: ")
-    top_n = int(input("Введите количество вакансий для вывода в топ N: "))
-    filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
-    salary_range = input("Введите диапазон зарплат: ") # Пример: 100000 - 150000
+    # Получение вакансий с hh.ru в формате JSON
+    try:
+        hh_data = hh.get_data()
+    except ParserAPIException as e:
+        logger.exception(f'Ошибка обращения к HHAPI. {e}')
+        print('Сервис не отвечает')
 
-    filtered_vacancies = filter_vacancies(vacancies_list, filter_words)
+    # Преобразование набора данных из JSON в список объектов
 
-    ranged_vacancies = get_vacancies_by_salary(filtered_vacancies, salary_range)
+    hh_vacancies = get_vacancy_units(hh_data)
 
+    # Фильтрация по ключевым словам
+    filtered_vacancies = filter_vacancies_by_keywords(hh_vacancies, user_input['keywords'])
+
+    # Фильтрация по зарплате
+    ranged_vacancies = filter_vacancies_by_salary(filtered_vacancies, user_input['salary_min'], user_input['salary_max'])
+
+    # Сортировка по зарплате
     sorted_vacancies = sort_vacancies(ranged_vacancies)
-    top_vacancies = get_top_vacancies(sorted_vacancies, top_n)
-    print_vacancies(top_vacancies)
+
+    # Отбор первых N
+    top_vacancies = sorted_vacancies[:user_input['top_n']]
+
+    # Вывод списка вакансий
+    [print(vacancy) for vacancy in top_vacancies]
 
 
-if __name__ == "__main__":
-    user_interaction()
+if __name__ == '__main__':
+    main()
