@@ -31,18 +31,20 @@ class HeadHunterAPI(ParserAPI):
         """ Выполнение запроса к HH, получение данных, обработка простых ошибок """
         if self.params['text'] == '':
             raise HeadHunterAPIException('Поисковый запрос не задан')
-        response = requests.get(self.url, params=self.params)
-        is_allowed = response.status_code == 200
-        if not is_allowed:
-            raise HeadHunterAPIException(f'Ошибка запроса данных status_code: {response.status_code}, {response.text}')
-        try:
-            return response.json()
-        except JSONDecodeError:
-            raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
+        vacancies = []
+        while self.params.get('page') != 20:
+            response = requests.get(self.url, headers=self.headers, params=self.params)
+            is_allowed = response.status_code == 200
+            if not is_allowed:
+                raise HeadHunterAPIException(f'Ошибка запроса данных status_code: {response.status_code}, {response.text}')
+            try:
+                vacancies_ = response.json()['items']
+                vacancies.extend(vacancies_)
+                self.params['page'] += 1
+            except JSONDecodeError:
+                raise HeadHunterAPIException(f'Ошибка обработки данных данных {response.text}')
+        return vacancies
 
 
-# if __name__ == '__main__':
-#
-#     hh = HeadHunterAPI('python')
-#     data = hh.get_data()
-#     print(data)
+if __name__ == '__main__':
+    pass
