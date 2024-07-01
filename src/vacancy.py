@@ -42,6 +42,8 @@ class HHVacancy:
     def verify_salary(salary_from, salary_to, currency) -> str:
         """ Генерация строки с зарплатой, валидация """
         if salary_from and salary_to:
+            if salary_from == salary_to:
+                return f'{salary_to} {currency}'
             return f'{salary_from}..{salary_to} {currency}'
         elif salary_from and not salary_to:
             return f'От {salary_from} {currency}'
@@ -115,12 +117,3 @@ class HHVacancy:
 
 if __name__ == '__main__':
     pass
-
-    # v1 = HHVacancy(1, 'Рабочий', 'Москва', '', '100', 'руб.', 'Завод', 'Знание SQL', 'ya.ru')
-    # v2 = HHVacancy(2, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    # v3 = HHVacancy(3, 'Служащий2', 'Москва', '200', '400', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    #
-    # print(v1)
-    # print(v2)
-    # print(v3)
-    # print(v1 < v2)

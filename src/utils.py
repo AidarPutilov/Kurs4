@@ -38,13 +38,14 @@ def filter_vacancies_by_salary(vacancies: list[HHVacancy], min, max) -> list[HHV
 def user_interface() -> dict:
     """ Начальный диалог с пользователем, возвращает словарь с введёнными данными """
 
-    return {
-        'search_word': 'python',
-        'keywords': ['python'],
-        'top_n': 10,
-        'salary_min': 0,
-        'salary_max': 100000
-    }
+    # Для тестирования
+    # return {
+    #     'search_word': 'python',
+    #     'keywords': ['python'],
+    #     'top_n': 10,
+    #     'salary_min': 0,
+    #     'salary_max': 100000
+    # }
 
     print('Поиск вакансий на HeadHunter по ключевому слову')
     search_word = input('Введите поисковый запрос: ')
