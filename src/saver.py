@@ -64,19 +64,3 @@ class JSONSaver(Saver):
 
 if __name__ == '__main__':
     pass
-
-    # s1 = JSONSaver(DATA_FILE_PATH_DEMO)
-    # ss = s1.load_data()
-    # print(ss)
-    #
-    # v1 = HHVacancy(1, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    # v2 = HHVacancy(2, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    # v3 = HHVacancy(3, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    # v4 = HHVacancy(4, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    # v5 = HHVacancy(5, 'Служащий', 'Москва', '200', '', 'руб.', 'Управление', 'Знание SQL', 'ya.ru')
-    #
-    # s1.write_vacancies([v1, v2, v3, v4, v5])
-
-    # s1.add_vacancies([v3, v2])
-
-    # s1.del_vacancies([v2, v3])
