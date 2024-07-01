@@ -38,6 +38,7 @@ def main():
     top_vacancies = sorted_vacancies[:user_input['top_n']]
 
     # Вывод списка вакансий
+    print('Вакансии, удовлетворяющие требованиям:')
     [print(vacancy) for vacancy in top_vacancies]
 
 
