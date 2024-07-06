@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def main():
 
-    # Начальный диалог
+    # Начальный диалог, данные ввода передаются в словарь user_input
     user_input = user_interface()
 
     # Создание экземпляра класса для работы с API сайтов с вакансиями
